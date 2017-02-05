@@ -270,7 +270,8 @@ class BitbucketBuildStatusHelper {
         gsonBuilder.setPrettyPrinting();
         Gson gson = gsonBuilder.create();
 
-        OAuthRequest request = new OAuthRequest(Verb.POST, buildStatusResource.generateUrl(Verb.POST));
+        String url = buildStatusResource.generateUrl(Verb.POST);
+        OAuthRequest request = new OAuthRequest(Verb.POST, url);
         request.addHeader("Content-type", "application/json");
         request.addPayload(gson.toJson(buildStatus));
 
@@ -279,6 +280,7 @@ class BitbucketBuildStatusHelper {
 
         Response response = request.send();
 
+        logger.info("This is the URL used: " + url);
         logger.info("This request was sent: " + request.getBodyContents());
         logger.info("This response was received: " + response.getBody());
         listener.getLogger().println("Sending build status " + buildStatus.getState() +
