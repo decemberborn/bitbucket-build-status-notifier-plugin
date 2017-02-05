@@ -54,7 +54,18 @@ public class GitScmAdapter implements ScmAdapter {
         }
 
         HashMap<String, URIish> commitRepoMap = new HashMap<String, URIish>();
-        BuildData buildData = build.getAction(BuildData.class);
+        List<BuildData> builds = build.getActions(BuildData.class);
+
+        BuildData buildData = null;
+
+        for (BuildData b : builds) {
+            URIish uri = repoList.get(0).getURIs().get(0);
+            if (b.remoteUrls.contains(uri.toString())) {
+                buildData = b;
+                break;
+            }
+        }
+
         if (buildData == null || buildData.getLastBuiltRevision() == null) {
             logger.warning("Build data could not be found");
         } else {
